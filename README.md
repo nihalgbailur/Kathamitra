@@ -2,6 +2,7 @@
 
 Kathamitra (Sanskrit: "Story Friend") is an interactive AI-powered storytelling application that collaborates with you to create engaging narratives. Using state-of-the-art language models and an intuitive interface, it helps bring your stories to life.
 
+
 ## ✨ Features
 
 - **Interactive Storytelling**: Co-create stories with AI assistance
@@ -10,6 +11,10 @@ Kathamitra (Sanskrit: "Story Friend") is an interactive AI-powered storytelling 
 - **Story Management**: Save and restore story checkpoints
 - **Chapter Organization**: Easily manage story chapters
 - **Export Options**: Save your stories in various formats (TXT, PDF, DOCX - coming soon)
+
+## 📸 Screenshot
+![Kathamitra Interface]()
+*Kathamitra's intuitive user interface with story controls and writing options*
 
 ## 🛠️ Technology Stack
 
