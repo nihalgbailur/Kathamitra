@@ -1,10 +1,59 @@
-# Kathamitra: Collaborative Storytelling Companion
+# Kathamitra 📚 - Your AI Storytelling Companion
 
-Kathamitra is an AI-powered collaborative storytelling companion that co-authors interactive stories. Built with **Streamlit**, **LangChain**, and **DeepSeek LLM (via Ollama)**, Kathamitra generates personalized story continuations based on your input.
+Kathamitra (Sanskrit: "Story Friend") is an interactive AI-powered storytelling application that collaborates with you to create engaging narratives. Using state-of-the-art language models and an intuitive interface, it helps bring your stories to life.
 
----
+## ✨ Features
 
-## 🚀 Project Structure
+- **Interactive Storytelling**: Co-create stories with AI assistance
+- **Genre Selection**: Choose from Fantasy, Science Fiction, Mystery, Romance, and Horror
+- **Writing Style Control**: Adjust between Concise, Balanced, and Descriptive styles
+- **Story Management**: Save and restore story checkpoints
+- **Chapter Organization**: Easily manage story chapters
+- **Export Options**: Save your stories in various formats (TXT, PDF, DOCX - coming soon)
+
+## 🛠️ Technology Stack
+
+- **Frontend**: Streamlit
+- **AI Engine**: LangChain + DeepSeek LLM (via Ollama)
+- **Language**: Python 3.9+
+
+## 📋 Prerequisites
+
+- Python 3.9 or higher
+- [Ollama](https://ollama.ai/) installed with `deepseek-r1:7b` model
+- Git (for cloning the repository)
+
+## 🚀 Getting Started
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/yourusername/kathamitra.git
+   cd kathamitra
+   ```
+
+2. **Set Up Virtual Environment**
+   ```bash
+   python3 -m venv venv
+   
+   # For Windows
+   venv\Scripts\activate
+   
+   # For macOS/Linux
+   source venv/bin/activate
+   ```
+
+3. **Install Dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Launch Application**
+   ```bash
+   streamlit run main.py
+   ```
+
+## 📁 Project Structure
+
 ```
 Kathamitra/
 ├── venv/                 # Virtual environment
