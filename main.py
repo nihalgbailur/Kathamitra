@@ -1,6 +1,7 @@
 import streamlit as st
 import subprocess
 from typing import List, Optional
+from datetime import datetime
 
 # Import LangChain modules
 from langchain.llms import BaseLLM
@@ -40,6 +41,26 @@ class DeepSeekLLM(BaseLLM):
         return LLMResult(generations=[[generation]])
 
 #########################################
+# 2. Story Management Functions
+#########################################
+
+def save_story_checkpoint():
+    """Save the current story state as a checkpoint"""
+    if "checkpoints" not in st.session_state:
+        st.session_state.checkpoints = []
+    
+    checkpoint = {
+        'timestamp': datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        'content': st.session_state.story_context
+    }
+    st.session_state.checkpoints.append(checkpoint)
+
+def restore_checkpoint(index):
+    """Restore the story to a previous checkpoint"""
+    if 0 <= index < len(st.session_state.checkpoints):
+        st.session_state.story_context = st.session_state.checkpoints[index]['content']
+
+#########################################
 # 2. Function to Generate Story Continuation
 #########################################
 
@@ -66,35 +87,125 @@ def generate_story(user_input: str, story_context: str) -> str:
     return story_continuation
 
 #########################################
-# 3. Streamlit User Interface
+# 3. Enhanced Streamlit User Interface
 #########################################
 
 def main():
-    st.title("Collaborative Storytelling Companion")
+    # Set page config
+    st.set_page_config(
+        page_title="Story Weaver AI",
+        page_icon="📚",
+        layout="wide"
+    )
+
+    # Custom CSS
+    st.markdown("""
+        <style>
+        .stButton>button {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        .story-container {
+            background-color: #f0f2f6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    # Title with emoji
+    st.title("📚 Kathamitra")
     
-    # Initialize session state to hold the evolving story context
+    # Initialize session states
     if "story_context" not in st.session_state:
         st.session_state.story_context = "Once upon a time, in a mystical land, adventure awaited."
-    
-    st.subheader("Current Story")
-    # Display the current story context
-    story_context = st.text_area("Story Context", st.session_state.story_context, height=200)
-    
-    st.subheader("Your Contribution")
-    # Field for the user to add plot twists or ideas
-    user_input = st.text_input("Enter your plot twist or idea:")
-    
-    if st.button("Continue Story"):
-        if user_input.strip() == "":
-            st.error("Please enter an idea or plot twist to continue the story.")
-        else:
-            with st.spinner("Generating story continuation..."):
-                continuation = generate_story(user_input, story_context)
-                # Update the story context with the generated continuation
-                updated_story_context = story_context + "\n" + continuation
-                st.session_state.story_context = updated_story_context
-                st.success("Story updated!")
-                st.text_area("Updated Story", updated_story_context, height=300)
+    if "chapter_count" not in st.session_state:
+        st.session_state.chapter_count = 1
+
+    # Create two columns for the main layout
+    col1, col2 = st.columns([2, 1])
+
+    with col1:
+        st.subheader("📖 Current Story")
+        story_context = st.text_area(
+            "Story Content",
+            st.session_state.story_context,
+            height=400,
+            key="story_area"
+        )
+
+        # Story statistics
+        word_count = len(story_context.split())
+        st.info(f"Word count: {word_count} | Chapter: {st.session_state.chapter_count}")
+
+    with col2:
+        st.subheader("🎨 Story Controls")
+        
+        # User input with genre selection
+        genre = st.selectbox(
+            "Select Genre",
+            ["Fantasy", "Science Fiction", "Mystery", "Romance", "Horror"]
+        )
+        
+        writing_style = st.select_slider(
+            "Writing Style",
+            options=["Concise", "Balanced", "Descriptive"],
+            value="Balanced"
+        )
+        
+        user_input = st.text_area(
+            "Enter your plot twist or idea:",
+            height=100
+        )
+
+        # Control buttons
+        col_btn1, col_btn2 = st.columns(2)
+        
+        with col_btn1:
+            if st.button("🔄 Continue Story"):
+                if user_input.strip() == "":
+                    st.error("Please enter an idea or plot twist.")
+                else:
+                    with st.spinner("Weaving your story..."):
+                        continuation = generate_story(user_input, story_context)
+                        updated_story = story_context + "\n\n" + continuation
+                        st.session_state.story_context = updated_story
+                        st.success("Story updated!")
+        
+        with col_btn2:
+            if st.button("📑 New Chapter"):
+                st.session_state.chapter_count += 1
+                save_story_checkpoint()
+                st.success(f"Started Chapter {st.session_state.chapter_count}")
+
+        # Story management tools
+        st.subheader("🛠️ Story Management")
+        
+        if st.button("💾 Save Checkpoint"):
+            save_story_checkpoint()
+            st.success("Checkpoint saved!")
+
+        if "checkpoints" in st.session_state and st.session_state.checkpoints:
+            checkpoint_index = st.selectbox(
+                "Restore Checkpoint",
+                range(len(st.session_state.checkpoints)),
+                format_func=lambda x: f"Checkpoint {x + 1} - {st.session_state.checkpoints[x]['timestamp']}"
+            )
+            
+            if st.button("⏮️ Restore"):
+                restore_checkpoint(checkpoint_index)
+                st.success("Story restored to checkpoint!")
+
+        # Export options
+        st.subheader("📤 Export Options")
+        export_format = st.selectbox(
+            "Export Format",
+            ["TXT", "PDF", "DOCX"]
+        )
+        
+        if st.button("📥 Export Story"):
+            st.info(f"Story would be exported as {export_format} (Feature coming soon)")
 
 if __name__ == "__main__":
     main()

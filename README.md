@@ -32,7 +32,7 @@ langchain
 ## 🧑‍💻 How to Set Up and Run Kathamitra
 ### 1. **Clone the Repository**
 ```bash
-git clone https://github.com/nihalgbailur/Kathamitra.git
+git clone https://github.com/yourusername/kathamitra.git
 cd kathamitra
 ```
 
